@@ -209,7 +209,7 @@ public class GUI extends JPanel {
 		File[] files = chooser.getSelectedFiles();
 		setFiles(files);
 
-		dest = new File(files[0].getParent()+"\\"+"repaired-"+files[0].getName());
+		dest = new File(files[0].getParentFile(), "repaired-" + files[0].getName());
 
 		Files.copy(files[0].toPath(), dest.toPath());
 	
@@ -289,7 +289,7 @@ public class GUI extends JPanel {
 		chooser.showOpenDialog((Frame) null);
 		File file = chooser.getSelectedFile();
 
-		 dest.renameTo(new File(file.getAbsolutePath() + "\\" + dest.getName()));
+		 dest.renameTo(new File(file, dest.getName()));
 		 System.exit(0);
 		}
 
