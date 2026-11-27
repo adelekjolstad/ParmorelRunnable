@@ -26,6 +26,11 @@ hs_err_pid*
 .DS_Store
 /bin/
 
+# IntelliJ IDEA (local IDE settings)
+.idea/
+*.iml
+/out/
+
 # Files specific to this project
 knowledge.xml
 
