@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -48,6 +49,7 @@ public class GUI extends JPanel {
 	private ButtonGroup groupMod;
 	private File[] files;
 	private File dest;
+	private File bestModelFile;
 	static JFrame frame;
 	JPanel newPanel = new JPanel();
 	private URI uri;
@@ -259,6 +261,7 @@ public class GUI extends JPanel {
 		System.out.println("PREFERENCES: " + preferences.toString());
 		try {
 			Solution bestSolution = ql.fixModel(dest);
+			bestModelFile = bestSolution.getModel();
 			
 			
 			frame.getContentPane().removeAll();
@@ -286,12 +289,18 @@ public class GUI extends JPanel {
 	void exportButtonPressed() throws IOException {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.showOpenDialog((Frame) null);
-		File file = chooser.getSelectedFile();
-
-		 dest.renameTo(new File(file, dest.getName()));
-		 System.exit(0);
+		if (chooser.showOpenDialog((Frame) null) != JFileChooser.APPROVE_OPTION) {
+			return; // cancelled
 		}
+		if (bestModelFile == null || !bestModelFile.exists()) {
+			JOptionPane.showMessageDialog(frame, "No repaired model to export.");
+			return;
+		}
+		File folder = chooser.getSelectedFile();
+		File exportedFile = new File(folder, dest.getName());
+		Files.copy(bestModelFile.toPath(), exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		JOptionPane.showMessageDialog(frame, "Repaired model saved to:\n" + exportedFile.getAbsolutePath());
+	}
 
 	public JPanel secondGUI() {
 	
